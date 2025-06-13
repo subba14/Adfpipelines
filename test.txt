@@ -1,0 +1,4 @@
+sample code
+
+git config --global user.email "subba.dmsbi@gmail.com"
+git config --global user.name "subba14"
