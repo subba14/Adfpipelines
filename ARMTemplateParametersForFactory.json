@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "testadf2107"
+        },
+        "SqlServer1_password": {
+            "value": ""
+        },
+        "SqlServer2_password": {
+            "value": ""
+        },
+        "SqlServer1_properties_typeProperties_server": {
+            "value": "DESKTOP-PI5EDJ6"
+        },
+        "SqlServer1_properties_typeProperties_database": {
+            "value": "AdventureWorks2019"
+        },
+        "SqlServer1_properties_typeProperties_userName": {
+            "value": "sa"
+        },
+        "SqlServer2_properties_typeProperties_server": {
+            "value": "DESKTOP-PI5EDJ6"
+        },
+        "SqlServer2_properties_typeProperties_database": {
+            "value": "subbu"
+        },
+        "SqlServer2_properties_typeProperties_userName": {
+            "value": "sa"
+        }
+    }
+}
