@@ -85,6 +85,26 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": ""
+				}
+			},
+			{
+				"name": "Set variable3",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": []
 			}
 		],
@@ -96,6 +116,10 @@
 			"server ": {
 				"type": "String",
 				"defaultValue": "sdssf"
+			},
+			"file": {
+				"type": "String",
+				"defaultValue": "sales"
 			}
 		},
 		"annotations": []
