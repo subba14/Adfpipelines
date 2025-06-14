@@ -69,12 +69,33 @@
 					"variableName": "table",
 					"value": ""
 				}
+			},
+			{
+				"name": "Set variable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"variables": {
 			"table": {
 				"type": "String",
 				"defaultValue": "dept"
+			},
+			"server ": {
+				"type": "String",
+				"defaultValue": "sdssf"
 			}
 		},
 		"annotations": []
