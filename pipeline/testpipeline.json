@@ -22,6 +22,7 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
+						"preCopyScript": "truncate table emp",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
@@ -47,8 +48,35 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "table",
+					"value": ""
+				}
 			}
 		],
+		"variables": {
+			"table": {
+				"type": "String",
+				"defaultValue": "dept"
+			}
+		},
 		"annotations": []
 	}
 }
