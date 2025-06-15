@@ -7,19 +7,19 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "testadf2107"
 		},
-		"SqlServergit_password": {
+		"SqlServer2_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SqlServergit'"
+			"metadata": "Secure string for 'password' of 'SqlServer2'"
 		},
-		"SqlServergit_properties_typeProperties_server": {
+		"SqlServer2_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "DESKTOP-PI5EDJ6"
 		},
-		"SqlServergit_properties_typeProperties_database": {
+		"SqlServer2_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "subbu"
 		},
-		"SqlServergit_properties_typeProperties_userName": {
+		"SqlServer2_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "sa"
 		}
@@ -29,7 +29,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/integrationRuntime2')]",
+			"name": "[concat(parameters('factoryName'), '/SHIR')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -39,26 +39,252 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SqlServergit')]",
+			"name": "[concat(parameters('factoryName'), '/SqlServer2')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "SqlServer",
 				"typeProperties": {
-					"server": "[parameters('SqlServergit_properties_typeProperties_server')]",
-					"database": "[parameters('SqlServergit_properties_typeProperties_database')]",
+					"server": "[parameters('SqlServer2_properties_typeProperties_server')]",
+					"database": "[parameters('SqlServer2_properties_typeProperties_database')]",
 					"encrypt": "optional",
 					"trustServerCertificate": false,
 					"authenticationType": "SQL",
-					"userName": "[parameters('SqlServergit_properties_typeProperties_userName')]",
+					"userName": "[parameters('SqlServer2_properties_typeProperties_userName')]",
 					"password": {
 						"type": "SecureString",
-						"value": "[parameters('SqlServergit_password')]"
+						"value": "[parameters('SqlServer2_password')]"
 					}
+				},
+				"connectVia": {
+					"referenceName": "SHIR",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/SHIR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "EmpID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "varchar"
+					},
+					{
+						"name": "LastName",
+						"type": "varchar"
+					},
+					{
+						"name": "Salary",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Address",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Employee"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServer2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Emp"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServer2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/testpipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "truncate table emp",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerTable2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "table",
+							"value": ""
+						}
+					},
+					{
+						"name": "Set variable2",
+						"type": "SetVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "server ",
+							"value": {
+								"value": "@activity('Copy data1').output",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable3",
+						"type": "SetVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Set variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "file",
+							"value": {
+								"value": "@activity('Copy data1').output",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table": {
+						"type": "String",
+						"defaultValue": "dept"
+					},
+					"server ": {
+						"type": "String",
+						"defaultValue": "sdssf"
+					},
+					"file": {
+						"type": "String",
+						"defaultValue": "sales"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable2')]"
+			]
 		}
 	]
 }

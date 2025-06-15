@@ -5,16 +5,16 @@
 		"factoryName": {
 			"value": "testadf2107"
 		},
-		"SqlServergit_password": {
+		"SqlServer2_password": {
 			"value": ""
 		},
-		"SqlServergit_properties_typeProperties_server": {
+		"SqlServer2_properties_typeProperties_server": {
 			"value": "DESKTOP-PI5EDJ6"
 		},
-		"SqlServergit_properties_typeProperties_database": {
+		"SqlServer2_properties_typeProperties_database": {
 			"value": "subbu"
 		},
-		"SqlServergit_properties_typeProperties_userName": {
+		"SqlServer2_properties_typeProperties_userName": {
 			"value": "sa"
 		}
 	}
