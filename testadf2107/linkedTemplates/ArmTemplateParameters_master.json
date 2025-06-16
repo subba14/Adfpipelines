@@ -5,16 +5,16 @@
 		"factoryName": {
 			"value": "testadf2107"
 		},
-		"SqlServer2_password": {
+		"SqlServer1_password": {
 			"value": ""
 		},
-		"SqlServer2_properties_typeProperties_server": {
+		"SqlServer1_properties_typeProperties_server": {
 			"value": "DESKTOP-PI5EDJ6"
 		},
-		"SqlServer2_properties_typeProperties_database": {
+		"SqlServer1_properties_typeProperties_database": {
 			"value": "subbu"
 		},
-		"SqlServer2_properties_typeProperties_userName": {
+		"SqlServer1_properties_typeProperties_userName": {
 			"value": "sa"
 		},
 		"containerUri": {
