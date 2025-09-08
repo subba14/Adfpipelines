@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "testadf2107"
 		},
+		"AzureBlobStorage_connectionString": {
+			"value": ""
+		},
 		"SqlServer1_password": {
 			"value": ""
 		},
